@@ -16,6 +16,7 @@ typedef address BinTree;
 #define Left(P) (P)->left
 #define Right(P) (P)->right
 #define Nil NULL
+#define empty(P) (P==NULL)
 
 void CreateEmpty(BinTree *P) {
 	*P = NULL;
@@ -73,28 +74,25 @@ bool IsUnerRight(BinTree P) {
 }
 
 void InsertNum(BinTree *P, infotype X) {
-	address NodeBaru;
 	
-	if (IsTreeEmpty(*P)) {
-		*P = Tree(X, NULL, NULL);
-	} else if (X<Akar(*P) && Left(*P)!=NULL) {
-		InsertNum(&Left(*P), X);
-	} else if (X<Akar(*P) && Left(*P)==NULL) {
-		NodeBaru = Tree(X, NULL, NULL);
-		Left(*P) = NodeBaru;
-	} else if (X>Akar(*P) && Right(*P)!=NULL) {
-		InsertNum(&Right(*P), X);
-	} else if (X>Akar(*P) && Right(*P)==NULL) {
-		NodeBaru = Tree(X, NULL, NULL);
-		Right(*P) = NodeBaru;
-	}
+	if(empty(*P)) {
+        *P=Allocation(X);
+        return;
+    }
+    if(Akar(*P)==X) {
+        return;
+    }
+    
+    if(X<Akar(*P)) InsertNum(&Left(*P),X);
+    else InsertNum(&Right(*P),X);
+
 }
 
-void PrintInOrder(BinTree P) {
+void PrintPreorder(BinTree P) {
 	if (!IsTreeEmpty(P)) {
-		PrintInOrder(Left(P));
+		PrintPreorder(Left(P));
 		cout << Akar(P) << endl;
-		PrintInOrder(Right(P));
+		PrintPreorder(Right(P));
 	}
 }
 
@@ -164,3 +162,79 @@ int LevelSearch(BinTree P, infotype X) {
 		return 0;
 	}
 }
+
+
+
+
+// This section to print tree data like a tree command on windows CMD
+/*
+|_ 50   lev.(0)
+|_|_ 30   lev.(1)
+|_|_|_ 20   lev.(2)
+|_|_|_ 40   lev.(2)
+|_|_ 70   lev.(1)
+|_|_|_ 60   lev.(2)
+|_|_|_ 80   lev.(2)
+*/
+string genchar(string x, int n){
+    string y ="";
+    for(int i=0;i<n;i++){
+        y+=x;
+    }
+    return y;
+}
+
+void draw(BinTree T,int i=1){
+    if(!empty(T)){
+        printf("%s %d   lev.(%d)\n",genchar("|_",i).c_str(),Akar(T),i-1);
+        draw(Left(T),i+1);
+        draw(Right(T),i+1);
+    }
+}
+// add mostleaft to BST
+void addLeafMost(BinTree *T, BinTree *L){
+    if(empty(Left(*T))) Left(*T) = *L;
+    else addLeafMost(&Left(*T),L);
+}
+
+
+// delete a node and recontructor tree by itself
+void delNode(BinTree *T,infotype x){
+    if(empty(*T)) return;
+    
+    if(x==Akar(*T)){
+        if(empty(Left(*T)) && empty(Right(*T))) {
+            *T = NULL;
+            return;
+        }
+
+        BinTree temp = *T;
+        *T = Right(*T);
+        addLeafMost(T,&Left(temp));
+        temp = NULL;
+    
+    }
+    else if(x>Akar(*T)) delNode(&Right(*T),x);
+    else delNode(&Left(*T),x);
+    
+}
+
+
+int main(){
+	BinTree T ;
+	CreateEmpty(&T);
+	InsertNum(&T,50);
+    InsertNum(&T, 30); 
+    InsertNum(&T, 20); 
+    InsertNum(&T,50);
+    InsertNum(&T, 40); 
+    InsertNum(&T, 70); 
+    InsertNum(&T, 60); 
+    InsertNum(&T, 80);
+	
+	delNode(&T,50);
+	// PrintPreorder(T);
+	draw(T);
+
+}
+
