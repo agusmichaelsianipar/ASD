@@ -16,6 +16,7 @@ typedef address BinTree;
 #define Left(P) (P)->left
 #define Right(P) (P)->right
 #define Nil NULL
+#define empty(P) (P==NULL)
 
 void CreateEmpty(BinTree *P) {
 	*P = NULL;
@@ -73,28 +74,25 @@ bool IsUnerRight(BinTree P) {
 }
 
 void InsertNum(BinTree *P, infotype X) {
-	address NodeBaru;
 	
-	if (IsTreeEmpty(*P)) {
-		*P = Tree(X, NULL, NULL);
-	} else if (X<Akar(*P) && Left(*P)!=NULL) {
-		InsertNum(&Left(*P), X);
-	} else if (X<Akar(*P) && Left(*P)==NULL) {
-		NodeBaru = Tree(X, NULL, NULL);
-		Left(*P) = NodeBaru;
-	} else if (X>Akar(*P) && Right(*P)!=NULL) {
-		InsertNum(&Right(*P), X);
-	} else if (X>Akar(*P) && Right(*P)==NULL) {
-		NodeBaru = Tree(X, NULL, NULL);
-		Right(*P) = NodeBaru;
-	}
+	if(empty(*P)) {
+        *P=Allocation(X);
+        return;
+    }
+    if(Akar(*P)==X) {
+        return;
+    }
+    
+    if(X<Akar(*P)) InsertNum(&Left(*P),X);
+    else InsertNum(&Right(*P),X);
+
 }
 
-void PrintInOrder(BinTree P) {
+void PrintPreorder(BinTree P) {
 	if (!IsTreeEmpty(P)) {
-		PrintInOrder(Left(P));
+		PrintPreorder(Left(P));
 		cout << Akar(P) << endl;
-		PrintInOrder(Right(P));
+		PrintPreorder(Right(P));
 	}
 }
 
@@ -164,3 +162,19 @@ int LevelSearch(BinTree P, infotype X) {
 		return 0;
 	}
 }
+
+int main(){
+	BinTree T ;
+	CreateEmpty(&T);
+	InsertNum(&T,50);
+    InsertNum(&T, 30); 
+    InsertNum(&T, 20); 
+    InsertNum(&T,50);
+    InsertNum(&T, 40); 
+    InsertNum(&T, 70); 
+    InsertNum(&T, 60); 
+    InsertNum(&T, 80);
+	PrintPreorder(T);
+
+}
+
