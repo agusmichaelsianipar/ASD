@@ -164,6 +164,8 @@ int LevelSearch(BinTree P, infotype X) {
 }
 
 
+
+
 // This section to print tree data like a tree command on windows CMD
 /*
 |_ 50   lev.(0)
@@ -189,6 +191,34 @@ void draw(BinTree T,int i=1){
         draw(Right(T),i+1);
     }
 }
+// add mostleaft to BST
+void addLeafMost(BinTree *T, BinTree *L){
+    if(empty(Left(*T))) Left(*T) = *L;
+    else addLeafMost(&Left(*T),L);
+}
+
+
+// delete a node and recontructor tree by itself
+void delNode(BinTree *T,infotype x){
+    if(empty(*T)) return;
+    
+    if(x==Akar(*T)){
+        if(empty(Left(*T)) && empty(Right(*T))) {
+            *T = NULL;
+            return;
+        }
+
+        BinTree temp = *T;
+        *T = Right(*T);
+        addLeafMost(T,&Left(temp));
+        temp = NULL;
+    
+    }
+    else if(x>Akar(*T)) delNode(&Right(*T),x);
+    else delNode(&Left(*T),x);
+    
+}
+
 
 int main(){
 	BinTree T ;
@@ -201,6 +231,8 @@ int main(){
     InsertNum(&T, 70); 
     InsertNum(&T, 60); 
     InsertNum(&T, 80);
+	
+	delNode(&T,50);
 	// PrintPreorder(T);
 	draw(T);
 
