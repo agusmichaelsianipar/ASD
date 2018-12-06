@@ -163,6 +163,33 @@ int LevelSearch(BinTree P, infotype X) {
 	}
 }
 
+
+// This section to print tree data like a tree command on windows CMD
+/*
+|_ 50   lev.(0)
+|_|_ 30   lev.(1)
+|_|_|_ 20   lev.(2)
+|_|_|_ 40   lev.(2)
+|_|_ 70   lev.(1)
+|_|_|_ 60   lev.(2)
+|_|_|_ 80   lev.(2)
+*/
+string genchar(string x, int n){
+    string y ="";
+    for(int i=0;i<n;i++){
+        y+=x;
+    }
+    return y;
+}
+
+void draw(BinTree T,int i=1){
+    if(!empty(T)){
+        printf("%s %d   lev.(%d)\n",genchar("|_",i).c_str(),Akar(T),i-1);
+        draw(Left(T),i+1);
+        draw(Right(T),i+1);
+    }
+}
+
 int main(){
 	BinTree T ;
 	CreateEmpty(&T);
@@ -174,7 +201,8 @@ int main(){
     InsertNum(&T, 70); 
     InsertNum(&T, 60); 
     InsertNum(&T, 80);
-	PrintPreorder(T);
+	// PrintPreorder(T);
+	draw(T);
 
 }
 
